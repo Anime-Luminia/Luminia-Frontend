@@ -28,14 +28,14 @@ const Modal: React.FC = () => {
 
   useEffect(() => {
     if (malId) {
-      document.body.style.overflow = 'hidden';
-      setActiveTab('info');
-      setIsVisible(true);
-      fetchAnimeDetails(malId);
+        document.body.style.overflow = 'hidden';
+        setActiveTab('info');
+        setIsVisible(true);
+        fetchAnimeDetails(malId);
     } else {
-      document.body.style.overflow = 'auto';
-      setIsVisible(false);
-      setAnimeDetails(null);
+        document.body.style.overflow = 'auto';
+        setIsVisible(false);
+        setAnimeDetails(null);
     }
 
     return () => {
@@ -126,10 +126,10 @@ const Modal: React.FC = () => {
       onClick={handleOutsideClick}
     >
       <div
-        className={`bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 relative transition-transform duration-300 ${
+        className={`bg-white rounded-lg modal-content shadow-lg w-full max-w-4xl p-6 relative transition-transform duration-300 ${
           isVisible ? 'animate-fade-in' : 'animate-fade-out'
         }`}
-        style={{ maxHeight: '90vh', overflowY: 'auto' }}
+        style={{ maxHeight: '90vh', overflowY: 'auto', scrollbarWidth: 'none' }}
       >
         <button onClick={handleCloseModal} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
           ✖️
