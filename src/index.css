@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 기본 스크롤바 */
 body::-webkit-scrollbar {
   width: 8px;
 }
@@ -21,5 +20,5 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .modal-content::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+  display: none;
 }

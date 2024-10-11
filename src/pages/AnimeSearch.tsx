@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import AnimeList from '../components/AnimeList'; 
+import AnimeList from '../components/AnimeList';
 import { api } from '../api/axios';
 import { Anime } from '../types/Anime';
 import { ApiResponse } from '../types/response';
@@ -21,19 +21,28 @@ const AnimeSearch: React.FC = () => {
         sortBy: 'koreanName',
         size: 10,
         searchQuery: searchQuery || undefined,
-        lastKoreanName: animeList.length ? animeList[animeList.length - 1].koreanName : undefined,
-        lastMalId: animeList.length ? animeList[animeList.length - 1].malId : undefined,
+        lastKoreanName: animeList.length
+          ? animeList[animeList.length - 1].koreanName
+          : undefined,
+        lastMalId: animeList.length
+          ? animeList[animeList.length - 1].malId
+          : undefined,
       };
 
-      const response = await api.get<ApiResponse<{ animes: Anime[] }>>('/api/anime/list', {
-        params,
-      });
+      const response = await api.get<ApiResponse<{ animes: Anime[] }>>(
+        '/api/anime/list',
+        {
+          params,
+        }
+      );
 
       const data = response.data;
 
       if (data.success && data.response?.animes) {
         const animes = data.response.animes || [];
-        setAnimeList((prevList) => (page === 0 ? animes : [...prevList, ...animes]));
+        setAnimeList((prevList) =>
+          page === 0 ? animes : [...prevList, ...animes]
+        );
         setHasMore(animes.length > 0);
         setLoading(false);
       } else {
@@ -61,18 +70,21 @@ const AnimeSearch: React.FC = () => {
   };
 
   // Intersection Observer를 사용한 스크롤 감지
-  const lastAnimeElementRef = useCallback((node: HTMLDivElement | null) => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
+  const lastAnimeElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage((prevPage) => prevPage + 1); // 페이지 증가
-      }
-    });
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1); // 페이지 증가
+        }
+      });
 
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   // 페이지가 변경될 때마다 새로운 데이터를 불러오는 로직
   useEffect(() => {
@@ -82,10 +94,10 @@ const AnimeSearch: React.FC = () => {
   // 스크롤 위치 추적 및 플로팅 버튼 표시
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 300) { 
-        setShowScrollTopButton(true); 
+      if (window.scrollY > 300) {
+        setShowScrollTopButton(true);
       } else {
-        setShowScrollTopButton(false); 
+        setShowScrollTopButton(false);
       }
     };
 
@@ -99,7 +111,7 @@ const AnimeSearch: React.FC = () => {
   //맨 처음에 데이터를 불러오는 로직
   useEffect(() => {
     if (page === 0) {
-      setPage(1); 
+      setPage(1);
     }
   }, []);
 
@@ -112,33 +124,40 @@ const AnimeSearch: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-6 text-purple-700">애니 검색</h1>
-      <div className="max-w-lg mx-auto mb-8">
+    <div className='p-8 bg-gray-100 min-h-screen'>
+      <h1 className='text-4xl font-bold text-center mb-6 text-purple-700'>
+        애니 검색
+      </h1>
+      <div className='max-w-lg mx-auto mb-8'>
         <input
-          type="text"
-          className="border border-gray-300 p-3 rounded-lg w-full mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          placeholder="애니 제목을 검색하세요"
+          type='text'
+          className='border border-gray-300 p-3 rounded-lg w-full mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500'
+          placeholder='애니 제목을 검색하세요'
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyPress}
         />
         <button
-          className="bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition-colors duration-200"
+          className='bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition-colors duration-200'
           onClick={handleSearch}
         >
           검색
         </button>
       </div>
 
-      <AnimeList animeList={animeList} lastAnimeElementRef={lastAnimeElementRef} />
-      {loading && <p className="text-center">로딩 중...</p>}
-      {!hasMore && !loading && <p className="text-center">더 이상 데이터가 없습니다.</p>}
+      <AnimeList
+        animeList={animeList}
+        lastAnimeElementRef={lastAnimeElementRef}
+      />
+      {loading && <p className='text-center'>로딩 중...</p>}
+      {!hasMore && !loading && (
+        <p className='text-center'>더 이상 데이터가 없습니다.</p>
+      )}
 
       {showScrollTopButton && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-10 right-10 bg-purple-700 text-white p-3 rounded-full shadow-lg hover:bg-purple-600 transition-colors duration-200"
+          className='fixed bottom-10 right-10 bg-purple-700 text-white p-3 rounded-full shadow-lg hover:bg-purple-600 transition-colors duration-200'
         >
           ▲
         </button>
