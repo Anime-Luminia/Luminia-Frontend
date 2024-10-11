@@ -1,23 +1,34 @@
 import React from 'react';
 import AnimeCard from './AnimeCard';
-import Grid from './Grid'; // Grid 컴포넌트 import
+import { Anime } from '../types/Anime';
 
-const AnimeList: React.FC<{ animeList: any[]; showResults: boolean; animatedCards: number[] }> = ({ animeList, showResults, animatedCards }) => {
+interface AnimeListProps {
+  animeList: Anime[]; // 애니 목록
+  lastAnimeElementRef: (node: HTMLDivElement | null) => void; // Ref 콜백 함수
+  animatedCards: number[]; // 애니메이션 효과를 위해 필요한 prop
+}
+
+const AnimeList: React.FC<AnimeListProps> = ({ animeList, lastAnimeElementRef, animatedCards }) => {
   return (
-    <Grid>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-screen-xl mx-auto p-4">
       {animeList.map((anime, index) => (
-        <AnimeCard
+        <div
           key={anime.malId}
-          malId={anime.malId}
-          koreanName={anime.koreanName}
-          imageUrl={anime.imageUrl}
-          productionCompany={anime.productionCompany}
-          score={anime.score}
-          index={index}
-          showResults={animatedCards.includes(index)} // 애니메이션 상태 전달
-        />
+          ref={animeList.length === index + 1 ? lastAnimeElementRef : null}
+          className={`transition-opacity duration-300 ${animatedCards.includes(index) ? 'opacity-100' : 'opacity-0'}`} // 애니메이션
+        >
+          <AnimeCard
+            malId={anime.malId}
+            koreanName={anime.koreanName}
+            imageUrl={anime.imageUrl}
+            productionCompany={anime.productionCompany}
+            score={anime.score}
+            index={index} // index 추가
+            showResults={animatedCards.includes(index)} // showResults 추가
+          />
+        </div>
       ))}
-    </Grid>
+    </div>
   );
 };
 
