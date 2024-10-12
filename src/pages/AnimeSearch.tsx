@@ -69,6 +69,12 @@ const AnimeSearch: React.FC = () => {
     setCurrentQuery(searchQuery);
   };
 
+  useEffect(() => {
+    if (currentQuery) {
+      fetchAnimeList(1);
+    }
+  }, [currentQuery]);
+
   // Enter 키를 눌렀을 때 검색 실행
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
