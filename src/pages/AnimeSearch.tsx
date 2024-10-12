@@ -3,19 +3,25 @@ import AnimeList from '../components/AnimeList';
 import { api } from '../api/axios';
 import { Anime } from '../types/Anime';
 import { ApiResponse } from '../types/response';
+import { useSearchParams } from 'react-router-dom';
 
 const AnimeSearch: React.FC = () => {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentQuery, setCurrentQuery] = useState('');
+  const [currentQuery, setCurrentQuery] = useState(
+    searchParams.get('searchQuery') || ''
+  );
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
 
   // API에서 애니 데이터를 가져오는 함수
-  const fetchAnimeList = async (page: number) => {
+  const fetchAnimeList = async (page: number, query: string = currentQuery) => {
+    if (loading || !hasMore) return;
     setLoading(true);
     try {
       const params: any = {
@@ -50,7 +56,7 @@ const AnimeSearch: React.FC = () => {
         setAnimeList((prevList) =>
           page === 1 ? animes : [...prevList, ...animes]
         );
-        setHasMore(animes.length > 0);
+        setHasMore(animes.length === 20);
       } else {
         setHasMore(false);
       }
@@ -63,17 +69,27 @@ const AnimeSearch: React.FC = () => {
 
   // 검색어가 변경되면 페이지를 초기화하고 검색
   const handleSearch = () => {
+    console.log(searchQuery + ' ' + currentQuery);
     setPage(1); // 페이지를 1로 설정
     setAnimeList([]); // 애니메이션 리스트 초기화
-    fetchAnimeList(1); // 첫 번째 페이지 데이터를 가져옴
     setCurrentQuery(searchQuery);
+    setSearchParams({ searchQuery });
+    fetchAnimeList(1, searchQuery);
   };
 
   useEffect(() => {
-    if (currentQuery) {
-      fetchAnimeList(1);
+    if (page > 1) {
+      console.log(searchQuery + ' ' + currentQuery);
+      fetchAnimeList(page);
     }
-  }, [currentQuery]);
+  }, [page]);
+
+  useEffect(() => {
+    if (initialLoad) {
+      fetchAnimeList(1); // 기본 목록 가져오기
+      setInitialLoad(false); // 초기 로딩 완료 후 상태 변경
+    }
+  }, [initialLoad]);
 
   // Enter 키를 눌렀을 때 검색 실행
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -85,11 +101,11 @@ const AnimeSearch: React.FC = () => {
   // Intersection Observer를 사용한 스크롤 감지
   const lastAnimeElementRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (loading) return;
+      if (loading || !hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !loading) {
           setPage((prevPage) => prevPage + 1); // 페이지 증가
         }
       });
@@ -98,13 +114,6 @@ const AnimeSearch: React.FC = () => {
     },
     [loading, hasMore]
   );
-
-  // 페이지가 변경될 때마다 새로운 데이터를 불러오는 로직
-  useEffect(() => {
-    if (page > 0) {
-      fetchAnimeList(page);
-    }
-  }, [page]);
 
   // 스크롤 위치 추적 및 플로팅 버튼 표시
   useEffect(() => {
@@ -143,7 +152,11 @@ const AnimeSearch: React.FC = () => {
           placeholder='애니 제목을 검색하세요'
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyPress}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
         />
         <button
           className='bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition-colors duration-200'
