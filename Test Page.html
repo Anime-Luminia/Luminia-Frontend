@@ -1,246 +1,279 @@
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+    th,
+    td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
 
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            text-align: center;
-        }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-align: center;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
-        tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
 
-        img {
-            width: 120px; /* 이미지 크기를 줄임 */
-            height: 150px;
-            cursor: pointer; /* 이미지를 클릭할 수 있도록 커서 설정 */
-        }
+    img {
+      width: 120px; /* 이미지 크기를 줄임 */
+      height: 150px;
+      cursor: pointer; /* 이미지를 클릭할 수 있도록 커서 설정 */
+    }
 
-        .pagination {
-            text-align: center;
-            margin: 20px 0;
-        }
+    .pagination {
+      text-align: center;
+      margin: 20px 0;
+    }
 
-        .pagination button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            font-size: 16px;
-            cursor: pointer;
-            border: 1px solid #007BFF;
-            background-color: #007BFF;
-            color: white;
-            border-radius: 5px;
-        }
+    .pagination button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: 1px solid #007bff;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
 
-        .pagination button:disabled {
-            background-color: #dddddd;
-            cursor: not-allowed;
-        }
+    .pagination button:disabled {
+      background-color: #dddddd;
+      cursor: not-allowed;
+    }
 
-        .pagination span {
-            font-size: 18px;
-            margin: 0 10px;
-        }
+    .pagination span {
+      font-size: 18px;
+      margin: 0 10px;
+    }
 
-        #search-input, #page-input {
-            padding: 5px;
-            font-size: 14px;
-        }
+    #search-input,
+    #page-input {
+      padding: 5px;
+      font-size: 14px;
+    }
 
-        #search-btn, #go-page-btn {
-            padding: 6px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-        }
+    #search-btn,
+    #go-page-btn {
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
 
-        #search-btn:hover, #go-page-btn:hover {
-            background-color: #0056b3;
-        }
+    #search-btn:hover,
+    #go-page-btn:hover {
+      background-color: #0056b3;
+    }
 
-        /* 이미지 모달 스타일 */
-        #image-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 1000;
-            text-align: center;
-        }
+    /* 이미지 모달 스타일 */
+    #image-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      text-align: center;
+    }
 
-        #image-modal img {
-            width: auto;
-            height: auto;
-            max-width: 90%;
-            max-height: 80vh;
-        }
+    #image-modal img {
+      width: auto;
+      height: auto;
+      max-width: 90%;
+      max-height: 80vh;
+    }
 
-        #image-modal button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    #image-modal button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-        #modal-background {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-    </style>
+    #modal-background {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Anime List</h1>
+  <h1>Anime List</h1>
 
-    <!-- 검색창 추가 -->
-    <div>
-        <label for="search-input">Search by Title:</label>
-        <input type="text" id="search-input" placeholder="Search..." />
-        <button id="search-btn">Search</button>
-    </div>
+  <!-- 검색창 추가 -->
+  <div>
+    <label for="search-input">Search by Title:</label>
+    <input type="text" id="search-input" placeholder="Search..." />
+    <button id="search-btn">Search</button>
+  </div>
 
-    <!-- 페이지 번호 입력 추가 -->
-    <div>
-        <label for="page-input">Page:</label>
-        <input type="number" id="page-input" value="1" min="1" />
-        <button id="go-page-btn">Go</button>
-    </div>
+  <!-- 페이지 번호 입력 추가 -->
+  <div>
+    <label for="page-input">Page:</label>
+    <input type="number" id="page-input" value="1" min="1" />
+    <button id="go-page-btn">Go</button>
+  </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Korean Name</th>
-                <th>Japanese Name</th>
-                <th>Production</th>
-                <th>Genre</th>
-                <th>Themes</th>
-                <th>MyAnimeList URL</th>
-                <th>Score</th>
-                <th>Source</th>
-            </tr>
-        </thead>
-        <tbody id="anime-list">
-            <!-- 데이터가 여기 들어옵니다 -->
-        </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Korean Name</th>
+        <th>Japanese Name</th>
+        <th>Production</th>
+        <th>Genre</th>
+        <th>Themes</th>
+        <th>MyAnimeList URL</th>
+        <th>Score</th>
+        <th>Source</th>
+      </tr>
+    </thead>
+    <tbody id="anime-list">
+      <!-- 데이터가 여기 들어옵니다 -->
+    </tbody>
+  </table>
 
-    <!-- 모달 추가 -->
-    <div id="anime-modal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black; z-index: 1000;">
-        <h2 id="modal-title"></h2>
-        <p><strong>Korean Name:</strong> <span id="modal-koreanName"></span></p>
-        <p><strong>Japanese Name:</strong> <span id="modal-japaneseName"></span></p>
-        <p><strong>Production:</strong> <span id="modal-production"></span></p>
-        <p><strong>Genre:</strong> <span id="modal-genre"></span></p>
-        <p><strong>Themes:</strong> <span id="modal-themes"></span></p>
-        <p><strong>Score:</strong> <span id="modal-score"></span></p>
-        <p><strong>Source:</strong> <span id="modal-source"></span></p>
-        <p><strong>MyAnimeList URL:</strong> <a id="modal-url" href="#" target="_blank">Go to MyAnimeList</a></p>
-        <button onclick="closeModal()">Close</button>
-    </div>
+  <!-- 모달 추가 -->
+  <div
+    id="anime-modal"
+    style="
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 1px solid black;
+      z-index: 1000;
+    "
+  >
+    <h2 id="modal-title"></h2>
+    <p><strong>Korean Name:</strong> <span id="modal-koreanName"></span></p>
+    <p><strong>Japanese Name:</strong> <span id="modal-japaneseName"></span></p>
+    <p><strong>Production:</strong> <span id="modal-production"></span></p>
+    <p><strong>Genre:</strong> <span id="modal-genre"></span></p>
+    <p><strong>Themes:</strong> <span id="modal-themes"></span></p>
+    <p><strong>Score:</strong> <span id="modal-score"></span></p>
+    <p><strong>Source:</strong> <span id="modal-source"></span></p>
+    <p>
+      <strong>MyAnimeList URL:</strong>
+      <a id="modal-url" href="#" target="_blank">Go to MyAnimeList</a>
+    </p>
+    <button onclick="closeModal()">Close</button>
+  </div>
 
-    <!-- 이미지 모달 추가 -->
-    <div id="image-modal">
-        <img id="modal-image" src="" alt="Anime Image" />
-        <button onclick="closeImageModal()">Close</button>
-    </div>
+  <!-- 이미지 모달 추가 -->
+  <div id="image-modal">
+    <img id="modal-image" src="" alt="Anime Image" />
+    <button onclick="closeImageModal()">Close</button>
+  </div>
 
-    <!-- 모달 백그라운드 추가 -->
-    <div id="modal-background" style="display:none;" onclick="closeImageModal()"></div>
+  <!-- 모달 백그라운드 추가 -->
+  <div
+    id="modal-background"
+    style="display: none"
+    onclick="closeImageModal()"
+  ></div>
 
-    <div class="pagination">
-        <button id="prev-btn" disabled>Prev</button>
-        <span id="page-info">Page 1 of 1</span>
-        <button id="next-btn">Next</button>
-    </div>
+  <div class="pagination">
+    <button id="prev-btn" disabled>Prev</button>
+    <span id="page-info">Page 1 of 1</span>
+    <button id="next-btn">Next</button>
+  </div>
 
-    <script>
-        const apiUrl = 'http://localhost:8080/api/anime/list';
-        let currentPage = 0;
-        const pageSize = 10;
-        let totalPages = 1; // 총 페이지 수 변수 추가
-        let searchQuery = '';
+  <script>
+    const apiUrl = 'http://localhost:8080/api/anime/list';
+    let currentPage = 0;
+    const pageSize = 10;
+    let totalPages = 1; // 총 페이지 수 변수 추가
+    let searchQuery = '';
 
-        document.getElementById('prev-btn').addEventListener('click', () => changePage(-1));
-        document.getElementById('next-btn').addEventListener('click', () => changePage(1));
-        document.getElementById('search-btn').addEventListener('click', searchAnime);
-        document.getElementById('go-page-btn').addEventListener('click', goToPage);
+    document
+      .getElementById('prev-btn')
+      .addEventListener('click', () => changePage(-1));
+    document
+      .getElementById('next-btn')
+      .addEventListener('click', () => changePage(1));
+    document
+      .getElementById('search-btn')
+      .addEventListener('click', searchAnime);
+    document.getElementById('go-page-btn').addEventListener('click', goToPage);
 
-        // 페이지 이동 함수
-        function changePage(direction) {
-            currentPage += direction;
-            loadAnimeList(currentPage);
-        }
+    // 페이지 이동 함수
+    function changePage(direction) {
+      currentPage += direction;
+      loadAnimeList(currentPage);
+    }
 
-        // 페이지 번호로 이동 함수
-        function goToPage() {
-            const pageInput = document.getElementById('page-input').value;
-            currentPage = parseInt(pageInput) - 1;
-            loadAnimeList(currentPage);
-        }
+    // 페이지 번호로 이동 함수
+    function goToPage() {
+      const pageInput = document.getElementById('page-input').value;
+      currentPage = parseInt(pageInput) - 1;
+      loadAnimeList(currentPage);
+    }
 
-        // 검색 기능
-        function searchAnime() {
-            searchQuery = document.getElementById('search-input').value;
-            currentPage = 0; // 검색 시 첫 페이지로 돌아가기
-            loadAnimeList(currentPage);
-        }
+    // 검색 기능
+    function searchAnime() {
+      searchQuery = document.getElementById('search-input').value;
+      currentPage = 0; // 검색 시 첫 페이지로 돌아가기
+      loadAnimeList(currentPage);
+    }
 
-        // 애니메이션 리스트 로드
-        async function loadAnimeList(page) {
-            const response = await fetch(`${apiUrl}?page=${page}&size=${pageSize}&searchQuery=${searchQuery}`);
-            const data = await response.json();
-            const animeList = document.getElementById('anime-list');
-            animeList.innerHTML = '';
+    // 애니메이션 리스트 로드
+    async function loadAnimeList(page) {
+      const response = await fetch(
+        `${apiUrl}?page=${page}&size=${pageSize}&searchQuery=${searchQuery}`
+      );
+      const data = await response.json();
+      const animeList = document.getElementById('anime-list');
+      animeList.innerHTML = '';
 
-            // 총 페이지 수와 페이지 번호 업데이트
-            totalPages = data.totalPages; // API에서 받은 총 페이지 수 사용
-            document.getElementById('page-info').textContent = `Page ${page + 1} of ${totalPages}`;
-            document.getElementById('prev-btn').disabled = page === 0;
-            document.getElementById('next-btn').disabled = page + 1 >= totalPages;
+      // 총 페이지 수와 페이지 번호 업데이트
+      totalPages = data.totalPages; // API에서 받은 총 페이지 수 사용
+      document.getElementById('page-info').textContent =
+        `Page ${page + 1} of ${totalPages}`;
+      document.getElementById('prev-btn').disabled = page === 0;
+      document.getElementById('next-btn').disabled = page + 1 >= totalPages;
 
-            // 페이지 번호 입력값 업데이트
-            document.getElementById('page-input').value = page + 1;
+      // 페이지 번호 입력값 업데이트
+      document.getElementById('page-input').value = page + 1;
 
-            data.content.forEach(anime => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+      data.content.forEach((anime) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
                     <td><img src="${anime.imageUrl}" alt="${anime.koreanName}" onclick="showImageModal('${anime.imageUrl}')"></td>
                     <td><a href="#" onclick="showAnimeDetails(${anime.malId})">${anime.koreanName}</a></td>
                     <td>${anime.japanesesName}</td>
@@ -251,50 +284,53 @@
                     <td>${anime.score}</td>
                     <td>${anime.source}</td>
                 `;
-                animeList.appendChild(row);
-            });
-        }
+        animeList.appendChild(row);
+      });
+    }
 
-        // 모달로 애니메이션 세부 정보 표시
-        async function showAnimeDetails(malId) {
-            const response = await fetch(`http://localhost:8080/api/anime/${malId}`);
-            const anime = await response.json();
+    // 모달로 애니메이션 세부 정보 표시
+    async function showAnimeDetails(malId) {
+      const response = await fetch(`http://localhost:8080/api/anime/${malId}`);
+      const anime = await response.json();
 
-            document.getElementById('modal-title').textContent = anime.koreanName;
-            document.getElementById('modal-koreanName').textContent = anime.koreanName;
-            document.getElementById('modal-japaneseName').textContent = anime.japanesesName;
-            document.getElementById('modal-production').textContent = anime.productionCompany;
-            document.getElementById('modal-genre').textContent = anime.genre;
-            document.getElementById('modal-themes').textContent = anime.themes;
-            document.getElementById('modal-score').textContent = anime.score;
-            document.getElementById('modal-source').textContent = anime.source;
-            document.getElementById('modal-url').href = anime.animelistUrl;
+      document.getElementById('modal-title').textContent = anime.koreanName;
+      document.getElementById('modal-koreanName').textContent =
+        anime.koreanName;
+      document.getElementById('modal-japaneseName').textContent =
+        anime.japanesesName;
+      document.getElementById('modal-production').textContent =
+        anime.productionCompany;
+      document.getElementById('modal-genre').textContent = anime.genre;
+      document.getElementById('modal-themes').textContent = anime.themes;
+      document.getElementById('modal-score').textContent = anime.score;
+      document.getElementById('modal-source').textContent = anime.source;
+      document.getElementById('modal-url').href = anime.animelistUrl;
 
-            // 모달 표시
-            document.getElementById('anime-modal').style.display = 'block';
-            document.getElementById('modal-background').style.display = 'block';
-        }
+      // 모달 표시
+      document.getElementById('anime-modal').style.display = 'block';
+      document.getElementById('modal-background').style.display = 'block';
+    }
 
-        // 이미지 모달 표시
-        function showImageModal(imageUrl) {
-            document.getElementById('modal-image').src = imageUrl;
-            document.getElementById('image-modal').style.display = 'block';
-            document.getElementById('modal-background').style.display = 'block';
-        }
+    // 이미지 모달 표시
+    function showImageModal(imageUrl) {
+      document.getElementById('modal-image').src = imageUrl;
+      document.getElementById('image-modal').style.display = 'block';
+      document.getElementById('modal-background').style.display = 'block';
+    }
 
-        // 이미지 모달 닫기
-        function closeImageModal() {
-            document.getElementById('image-modal').style.display = 'none';
-            document.getElementById('modal-background').style.display = 'none';
-        }
+    // 이미지 모달 닫기
+    function closeImageModal() {
+      document.getElementById('image-modal').style.display = 'none';
+      document.getElementById('modal-background').style.display = 'none';
+    }
 
-        // 모달 닫기
-        function closeModal() {
-            document.getElementById('anime-modal').style.display = 'none';
-            document.getElementById('modal-background').style.display = 'none';
-        }
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('anime-modal').style.display = 'none';
+      document.getElementById('modal-background').style.display = 'none';
+    }
 
-        // 초기 페이지 로드 (1페이지)
-        loadAnimeList(currentPage);
-    </script>
+    // 초기 페이지 로드 (1페이지)
+    loadAnimeList(currentPage);
+  </script>
 </body>

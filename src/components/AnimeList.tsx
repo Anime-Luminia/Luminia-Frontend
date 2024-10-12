@@ -1,21 +1,33 @@
 import React from 'react';
 import AnimeCard from './AnimeCard';
-import Grid from './Grid'; // Grid 컴포넌트 import
+import { Anime } from '../types/Anime';
+import Grid from './Grid';
 
-const AnimeList: React.FC<{ animeList: any[]; showResults: boolean; animatedCards: number[] }> = ({ animeList, showResults, animatedCards }) => {
+interface AnimeListProps {
+  animeList: Anime[];
+  lastAnimeElementRef: (node: HTMLDivElement | null) => void;
+}
+
+const AnimeList: React.FC<AnimeListProps> = ({
+  animeList,
+  lastAnimeElementRef,
+}) => {
   return (
     <Grid>
       {animeList.map((anime, index) => (
-        <AnimeCard
+        <div
           key={anime.malId}
-          malId={anime.malId}
-          koreanName={anime.koreanName}
-          imageUrl={anime.imageUrl}
-          productionCompany={anime.productionCompany}
-          score={anime.score}
-          index={index}
-          showResults={animatedCards.includes(index)} // 애니메이션 상태 전달
-        />
+          ref={animeList.length === index + 1 ? lastAnimeElementRef : null}
+        >
+          <AnimeCard
+            malId={anime.malId}
+            koreanName={anime.koreanName}
+            imageUrl={anime.imageUrl}
+            productionCompany={anime.productionCompany}
+            score={anime.score}
+            index={index}
+          />
+        </div>
       ))}
     </Grid>
   );

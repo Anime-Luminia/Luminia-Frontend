@@ -9,11 +9,11 @@ const Tabs: React.FC<TabsProps> = ({ onTabChange }) => {
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-    onTabChange(tab); 
+    onTabChange(tab);
   };
 
   return (
-    <div className="flex space-x-8 border-b border-gray-300 mb-4">
+    <div className='flex space-x-8 border-b border-gray-300 mb-4'>
       <button
         className={`pb-2 text-lg font-semibold transition-colors duration-200 ${activeTab === 'info' ? 'text-purple-600 border-b-4 border-purple-600' : 'text-gray-600 hover:text-purple-400'}`}
         onClick={() => handleTabClick('info')}
