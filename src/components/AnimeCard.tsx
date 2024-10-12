@@ -38,7 +38,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
 
       <div className='p-4 flex flex-col justify-between h-full text-center'>
         <div>
-          <h2 className='text-lg font-semibold mb-1 line-clamp-2 h-16'>
+          <h2 className='text-lg font-semibold mb-1 line-clamp-2 h-17'>
             {koreanName}
           </h2>
         </div>

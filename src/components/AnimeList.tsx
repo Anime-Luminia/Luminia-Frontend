@@ -24,7 +24,7 @@ const AnimeList: React.FC<AnimeListProps> = ({
             imageUrl={anime.imageUrl}
             productionCompany={anime.productionCompany}
             score={anime.score}
-            index={index} // index 추가
+            index={index}
           />
         </div>
       ))}
