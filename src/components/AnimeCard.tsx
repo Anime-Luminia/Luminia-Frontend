@@ -25,10 +25,10 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
 
   return (
     <div
-      className='bg-white shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer min-h-[450px] flex flex-col justify-between'
+      className='bg-white shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer flex flex-col justify-between'
       onClick={handleCardClick}
     >
-      <div className='w-full h-80'>
+      <div className='w-full h-56 sm:h-64'>
         <img
           src={imageUrl}
           alt={koreanName}
@@ -36,9 +36,9 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         />
       </div>
 
-      <div className='p-4 flex flex-col justify-between h-full text-center'>
-        <div>
-          <h2 className='text-lg font-semibold mb-1 line-clamp-2 h-17'>
+      <div className='p-4 flex flex-col justify-between text-center'>
+        <div className='flex items-center justify-center h-10 sm:h-14'>
+          <h2 className='text-base sm:text-lg font-semibold mb-1 line-clamp-2'>
             {koreanName}
           </h2>
         </div>

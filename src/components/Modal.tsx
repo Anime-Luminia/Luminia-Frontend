@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Tabs from './Tabs';
+import { api } from '../api/axios';
 
 interface AnimeDetails {
   malId: number;
@@ -46,7 +47,7 @@ const Modal: React.FC = () => {
   const fetchAnimeDetails = async (malId: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`https://localhost:8080/api/anime/${malId}`);
+      const response = await fetch(`http://localhost:8080/api/anime/${malId}`);
       const data = await response.json();
       setAnimeDetails(data);
     } catch (error) {
