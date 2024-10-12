@@ -21,13 +21,14 @@ const AnimeSearch: React.FC = () => {
 
   // API에서 애니 데이터를 가져오는 함수
   const fetchAnimeList = async (page: number, query: string = currentQuery) => {
-    if (loading || !hasMore) return;
+    if (loading) return;
     setLoading(true);
     try {
+      console.log(query + ' ' + currentQuery);
       const params: any = {
         sortBy: 'koreanName',
         size: 20,
-        searchQuery: currentQuery || undefined,
+        searchQuery: query || undefined,
         lastKoreanName:
           page === 1
             ? undefined
@@ -69,17 +70,19 @@ const AnimeSearch: React.FC = () => {
 
   // 검색어가 변경되면 페이지를 초기화하고 검색
   const handleSearch = () => {
-    console.log(searchQuery + ' ' + currentQuery);
     setPage(1); // 페이지를 1로 설정
     setAnimeList([]); // 애니메이션 리스트 초기화
     setCurrentQuery(searchQuery);
-    setSearchParams({ searchQuery });
+    if (searchQuery) {
+      setSearchParams({ searchQuery });
+    } else {
+      setSearchParams({});
+    }
     fetchAnimeList(1, searchQuery);
   };
 
   useEffect(() => {
     if (page > 1) {
-      console.log(searchQuery + ' ' + currentQuery);
       fetchAnimeList(page);
     }
   }, [page]);
@@ -90,13 +93,6 @@ const AnimeSearch: React.FC = () => {
       setInitialLoad(false); // 초기 로딩 완료 후 상태 변경
     }
   }, [initialLoad]);
-
-  // Enter 키를 눌렀을 때 검색 실행
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
 
   // Intersection Observer를 사용한 스크롤 감지
   const lastAnimeElementRef = useCallback(
