@@ -7,7 +7,8 @@ import { ApiResponse } from '../types/response';
 const AnimeSearch: React.FC = () => {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1); // 초기값을 1로 설정
+  const [currentQuery, setCurrentQuery] = useState('');
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
@@ -20,7 +21,7 @@ const AnimeSearch: React.FC = () => {
       const params: any = {
         sortBy: 'koreanName',
         size: 20,
-        searchQuery: searchQuery || undefined,
+        searchQuery: currentQuery || undefined,
         lastKoreanName:
           page === 1
             ? undefined
@@ -65,6 +66,7 @@ const AnimeSearch: React.FC = () => {
     setPage(1); // 페이지를 1로 설정
     setAnimeList([]); // 애니메이션 리스트 초기화
     fetchAnimeList(1); // 첫 번째 페이지 데이터를 가져옴
+    setCurrentQuery(searchQuery);
   };
 
   // Enter 키를 눌렀을 때 검색 실행

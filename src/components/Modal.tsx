@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Tabs from './Tabs';
 import { api } from '../api/axios';
+import { ApiResponse } from '../types/response';
 
 interface AnimeDetails {
   malId: number;
@@ -16,6 +17,8 @@ interface AnimeDetails {
   score: number;
   rating: string;
   source: string;
+  themes?: string;
+  special?: string;
 }
 
 const Modal: React.FC = () => {
@@ -47,9 +50,17 @@ const Modal: React.FC = () => {
   const fetchAnimeDetails = async (malId: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/anime/${malId}`);
-      const data = await response.json();
-      setAnimeDetails(data);
+      const response = await api.get<ApiResponse<AnimeDetails>>(
+        `/api/anime/${malId}`
+      );
+
+      const data = response.data;
+
+      if (data.success && data.response) {
+        setAnimeDetails(data.response);
+      } else {
+        console.error('Failed to fetch anime details:', data.message);
+      }
     } catch (error) {
       console.error('Failed to fetch anime details:', error);
     } finally {
