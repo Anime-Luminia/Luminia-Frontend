@@ -9,17 +9,25 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   sortBy,
   onSortChange,
 }) => {
+  const sortOptions = [
+    { label: '이름 순', value: 'koreanName' },
+    { label: '최신 순', value: 'latest' },
+    { label: '인기 순', value: 'popular' },
+    { label: '추천 순', value: 'recommended' },
+  ];
+
   return (
-    <div className='absolute top-0 right-0 p-2'>
+    <div className='p-2'>
       <select
         value={sortBy}
         onChange={onSortChange}
-        className='p-2 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500'
+        className='px-3 py-2 bg-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
       >
-        <option value='koreanName'>이름순</option>
-        <option value='latest'>최신순</option>
-        <option value='popular'>인기순</option>
-        <option value='recommended'>추천순</option>
+        {sortOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );
