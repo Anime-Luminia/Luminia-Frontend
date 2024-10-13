@@ -30,16 +30,19 @@ const AnimeSearch: React.FC = () => {
   const [selectedProducer, setSelectedProducer] = useState<
     string | undefined
   >();
-  const [selectedType, setSelectedType] = useState<string | undefined>();
   const [selectedOriginalType, setSelectedOriginalType] = useState<
     string | undefined
   >();
   const [selectedGenres, setSelectedGenres] = useState<Record<string, string>>(
     {}
   );
+  const [selectedTypes, setSelectedTypes] = useState<Record<string, string>>(
+    {}
+  ); // 애니 유형 선택 상태 추가
   const [selectedRating, setSelectedRating] = useState<string | undefined>();
-
-  // 필터 열림/닫힘 상태 추가
+  const [selectedSource, setSelectedSources] = useState<Record<string, string>>(
+    {}
+  );
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -163,7 +166,7 @@ const AnimeSearch: React.FC = () => {
   return (
     <div className='p-8 bg-gray-100 min-h-screen'>
       <h1 className='text-4xl font-bold text-center mb-6 text-purple-700'>
-        애니 검색
+        애니 검색 (아직 필터 작동 안됨)
       </h1>
       <div className='max-w-lg mx-auto mb-8'>
         <div className='max-w-lg mx-auto mb-8 flex space-x-2'>
@@ -203,12 +206,14 @@ const AnimeSearch: React.FC = () => {
           setExcludeExplicit={setExcludeExplicit}
           selectedProducer={selectedProducer}
           setSelectedProducer={setSelectedProducer}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
           selectedOriginalType={selectedOriginalType}
           setSelectedOriginalType={setSelectedOriginalType}
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
+          selectedTypes={selectedTypes}
+          setSelectedTypes={setSelectedTypes}
+          selectedSource={selectedSource}
+          setSelectedSources={setSelectedSources}
           selectedRating={selectedRating}
           setSelectedRating={setSelectedRating}
         />
