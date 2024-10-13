@@ -24,7 +24,6 @@ const AnimeSearch: React.FC = () => {
     if (loading) return;
     setLoading(true);
     try {
-      console.log(query + ' ' + currentQuery);
       const params: any = {
         sortBy: 'koreanName',
         size: 20,
