@@ -30,22 +30,25 @@ const AnimeSearch: React.FC = () => {
   const [selectedProducer, setSelectedProducer] = useState<
     string | undefined
   >();
-  const [selectedOriginalType, setSelectedOriginalType] = useState<
-    string | undefined
-  >();
   const [selectedGenres, setSelectedGenres] = useState<Record<string, string>>(
     {}
   );
   const [selectedTypes, setSelectedTypes] = useState<Record<string, string>>(
     {}
   ); // 애니 유형 선택 상태 추가
-  const [selectedRating, setSelectedRating] = useState<string | undefined>();
+  const [selectedRating, setSelectedRating] = useState<Record<string, string>>(
+    {}
+  );
   const [selectedSource, setSelectedSources] = useState<Record<string, string>>(
     {}
   );
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
+
+  const [displayedAnimeIds, setDisplayedAnimeIds] = useState<Set<number>>(
+    new Set()
+  );
 
   // API에서 애니 데이터를 가져오는 함수
   const fetchAnimeList = async (page: number, query: string = currentQuery) => {
@@ -54,7 +57,7 @@ const AnimeSearch: React.FC = () => {
     try {
       const params: any = {
         sortBy,
-        size: 20,
+        size: 50,
         searchQuery: query || undefined,
         lastKoreanName:
           page === 1
@@ -81,10 +84,30 @@ const AnimeSearch: React.FC = () => {
 
       if (data.success && data.response?.animes) {
         const animes = data.response.animes || [];
-        setAnimeList((prevList) =>
-          page === 1 ? animes : [...prevList, ...animes]
+
+        //중복되지 않은 애니만 처리하기 (ID 기준)
+        const newAnimes = animes.filter(
+          (anime) => !displayedAnimeIds.has(anime.malId)
         );
-        setHasMore(animes.length === 20);
+
+        setAnimeList((prevList) =>
+          page === 1 ? animes : [...prevList, ...newAnimes]
+        );
+
+        // 새로운 애니의를 Set에 넣어두기
+        setDisplayedAnimeIds((prevIds) => {
+          const updatedIds = new Set(prevIds);
+          newAnimes.forEach((anime) => updatedIds.add(anime.malId));
+          return updatedIds;
+        });
+
+        if (newAnimes.length > 0) {
+          const lastAnime = newAnimes[newAnimes.length - 1];
+          params.lastKoreanName = lastAnime.koreanName;
+          params.lastMalId = lastAnime.malId;
+        }
+
+        setHasMore(animes.length === 50);
       } else {
         setHasMore(false);
       }
@@ -132,9 +155,12 @@ const AnimeSearch: React.FC = () => {
   // Intersection Observer를 사용한 스크롤 감지
   const lastAnimeElementRef = useCallback(
     (node: HTMLDivElement | null) => {
+      console.log('테스트1' + loading + ' ' + hasMore);
       if (loading || !hasMore) return;
-      if (observer.current) observer.current.disconnect();
-
+      if (observer.current) {
+        console.log('테스트');
+        observer.current.disconnect();
+      }
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
           setPage((prevPage) => prevPage + 1);
@@ -165,14 +191,14 @@ const AnimeSearch: React.FC = () => {
 
   return (
     <div className='p-8 bg-gray-100 min-h-screen'>
-      <h1 className='text-4xl font-bold text-center mb-6 text-purple-700'>
+      <h1 className='text-4xl font-bold text-center mb-6 text-accent'>
         애니 검색 (아직 필터 작동 안됨)
       </h1>
       <div className='max-w-lg mx-auto mb-8'>
         <div className='max-w-lg mx-auto mb-8 flex space-x-2'>
           <input
             type='text'
-            className='border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-500'
+            className='border border-lightGray p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-accent'
             placeholder='애니 제목을 검색하세요'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -192,7 +218,7 @@ const AnimeSearch: React.FC = () => {
 
         <div className='max-w-lg mx-auto mb-8'>
           <button
-            className='bg-purple-700 hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg w-full transition-colors duration-200'
+            className='bg-accent hover:bg-hover text-white font-semibold py-3 px-4 rounded-lg w-full transition-colors duration-200'
             onClick={handleSearch}
           >
             검색
@@ -206,8 +232,6 @@ const AnimeSearch: React.FC = () => {
           setExcludeExplicit={setExcludeExplicit}
           selectedProducer={selectedProducer}
           setSelectedProducer={setSelectedProducer}
-          selectedOriginalType={selectedOriginalType}
-          setSelectedOriginalType={setSelectedOriginalType}
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
           selectedTypes={selectedTypes}
@@ -226,7 +250,7 @@ const AnimeSearch: React.FC = () => {
         <SortDropdown sortBy={sortBy} onSortChange={handleSortChange} />
       </div>
 
-      <div className='max-w-screen-xl mx-auto border-t border-gray-300 my-4'></div>
+      <div className='max-w-screen-xl mx-auto border-t border-lightGray my-4'></div>
 
       <AnimeList
         animeList={animeList}

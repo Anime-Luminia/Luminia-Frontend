@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Grid from './Grid'; // Grid 컴포넌트를 가져옴
 import { genreOptions } from '../types/genreOptions';
 import { animeTypeOptions } from '../types/animeTypeOptions';
+import { rating } from '../types/ratingOptions';
 import { source } from '../types/sourceOptions';
 import Dropdown from './Dropdown';
 
@@ -10,10 +11,6 @@ interface FilterModalProps {
   setExcludeExplicit: React.Dispatch<React.SetStateAction<boolean>>;
   selectedProducer: string | undefined;
   setSelectedProducer: React.Dispatch<React.SetStateAction<string | undefined>>;
-  selectedOriginalType: string | undefined;
-  setSelectedOriginalType: React.Dispatch<
-    React.SetStateAction<string | undefined>
-  >;
   selectedGenres: Record<string, string>;
   setSelectedGenres: React.Dispatch<
     React.SetStateAction<Record<string, string>>
@@ -26,8 +23,10 @@ interface FilterModalProps {
   setSelectedSources: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
-  selectedRating: string | undefined;
-  setSelectedRating: React.Dispatch<React.SetStateAction<string | undefined>>;
+  selectedRating: Record<string, string>;
+  setSelectedRating: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >;
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
@@ -35,8 +34,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
   setExcludeExplicit,
   selectedProducer,
   setSelectedProducer,
-  selectedOriginalType,
-  setSelectedOriginalType,
   selectedGenres,
   setSelectedGenres,
   selectedTypes,
@@ -49,9 +46,11 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false); // 장르 드롭다운 상태 관리
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const [isSourceDropdownOpen, setIsSourceDropdownOpen] = useState(false);
+  const [isRatingDropdownOpen, setIsRatingDropdownOpen] = useState(false);
   const genreDropdownRef = useRef<HTMLDivElement | null>(null); // 드롭다운 감지용 ref
   const typeDropdownRef = useRef<HTMLDivElement | null>(null);
   const sourceDropdownRef = useRef<HTMLDivElement | null>(null);
+  const ratingDropdownRef = useRef<HTMLDivElement | null>(null);
 
   // 장르 상태 처리 함수 (3단계: 추가 `+`, 제거 `-`, 선택 해제 `x`)
   const toggleGenre = (genre: string) => {
@@ -80,9 +79,19 @@ const FilterModal: React.FC<FilterModalProps> = ({
     if (selectedSource[type] === '+') {
       const updatedTypes = { ...selectedSource };
       delete updatedTypes[type];
-      setSelectedTypes(updatedTypes);
+      setSelectedSources(updatedTypes);
     } else {
-      setSelectedTypes({ ...selectedSource, [type]: '+' });
+      setSelectedSources({ ...selectedSource, [type]: '+' });
+    }
+  };
+
+  const toggleRating = (type: string) => {
+    if (selectedRating[type] === '+') {
+      const updatedTypes = { ...selectedRating };
+      delete updatedTypes[type];
+      setSelectedRating(updatedTypes);
+    } else {
+      setSelectedRating({ ...selectedRating, [type]: '+' });
     }
   };
 
@@ -122,7 +131,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
         <div className='col-span-2' ref={genreDropdownRef}>
           <label className='font-semibold mb-1 block'>장르</label>
           <div
-            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full'
+            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full bg-white'
             onClick={() => setIsGenreDropdownOpen(!isGenreDropdownOpen)}
           >
             장르 선택
@@ -141,7 +150,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
         <div className='col-span-1' ref={typeDropdownRef}>
           <label className='font-semibold mb-1 block'>애니 유형</label>
           <div
-            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full'
+            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full bg-white'
             onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
           >
             애니 유형 선택
@@ -156,23 +165,11 @@ const FilterModal: React.FC<FilterModalProps> = ({
           />
         </div>
 
-        {/* 제작사 입력 */}
-        <div>
-          <label className='font-semibold mb-1 block'>제작사</label>
-          <input
-            type='text'
-            className='border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full'
-            placeholder='제작사를 입력하세요'
-            value={selectedProducer || ''}
-            onChange={(e) => setSelectedProducer(e.target.value)}
-          />
-        </div>
-
         {/* 원작 유형 */}
         <div className='col-span-1' ref={sourceDropdownRef}>
           <label className='font-semibold mb-1 block'>원작 유형</label>
           <div
-            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full'
+            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full bg-white'
             onClick={() => setIsSourceDropdownOpen(!isSourceDropdownOpen)}
           >
             원작 선택
@@ -188,18 +185,59 @@ const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* 등급 */}
-        <div>
-          <label className='font-semibold mb-1 block'>등급</label>
-          <select
-            className='border border-gray-300 p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-500'
-            value={selectedRating || ''}
-            onChange={(e) => setSelectedRating(e.target.value)}
+        <div className='col-span-1' ref={ratingDropdownRef}>
+          <label className='font-semibold mb-1 block'>원작 유형</label>
+          <div
+            className='border border-gray-300 p-2 rounded-lg cursor-pointer w-full bg-white'
+            onClick={() => setIsRatingDropdownOpen(!isRatingDropdownOpen)}
           >
-            <option value=''>전체</option>
-            <option value='G'>전체 이용가</option>
-            <option value='PG-13'>13세 이상</option>
-            <option value='R'>19세 이상</option>
-          </select>
+            등급
+          </div>
+          <Dropdown
+            isOpen={isRatingDropdownOpen}
+            setIsOpen={setIsRatingDropdownOpen}
+            type='rating'
+            options={rating}
+            selectedOptions={selectedRating}
+            toggleOption={toggleRating}
+          />
+        </div>
+
+        {/* 제작사 입력 */}
+        <div>
+          <label className='font-semibold mb-1 block'>제작사</label>
+          <input
+            type='text'
+            className='border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full'
+            placeholder='아직 안됩니다'
+            value={selectedProducer || ''}
+            onChange={(e) => setSelectedProducer(e.target.value)}
+          />
+        </div>
+
+        {/* 감독 입력 */}
+        <div>
+          <label className='font-semibold mb-1 block'>감독</label>
+          <input
+            type='text'
+            className='border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full'
+            placeholder='아직 안됩니다'
+            value={selectedProducer || ''}
+            onChange={(e) => setSelectedProducer(e.target.value)}
+          />
+        </div>
+
+        <div className='col-span-2 mt-4 flex items-center'>
+          <input
+            type='checkbox'
+            id='excludeExplicit'
+            className='mr-2'
+            checked={excludeExplicit}
+            onChange={() => setExcludeExplicit(!excludeExplicit)}
+          />
+          <label htmlFor='excludeExplicit' className='font-semibold'>
+            건전한 애니메이션만 표시
+          </label>
         </div>
 
         {/* 필터 태그를 등급 필터 아래로 이동 */}
@@ -223,19 +261,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </span>
               ))}
           </div>
-        </div>
-
-        <div className='col-span-2 mt-4 flex items-center'>
-          <input
-            type='checkbox'
-            id='excludeExplicit'
-            className='mr-2'
-            checked={excludeExplicit}
-            onChange={() => setExcludeExplicit(!excludeExplicit)}
-          />
-          <label htmlFor='excludeExplicit' className='font-semibold'>
-            건전한 애니메이션만 표시
-          </label>
         </div>
       </Grid>
     </div>

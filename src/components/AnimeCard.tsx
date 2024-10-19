@@ -25,7 +25,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
 
   return (
     <div
-      className='bg-white shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer flex flex-col justify-between'
+      className='bg-white shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer flex flex-col justify-between transform transition-transform duration-300 hover:scale-105'
       onClick={handleCardClick}
     >
       <div className='w-full h-56 sm:h-64'>

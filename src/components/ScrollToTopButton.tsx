@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaArrowUp } from 'react-icons/fa'; // FontAwesome 아이콘 사용
 
 interface ScrollToTopButtonProps {
   showScrollTopButton: boolean;
@@ -19,9 +20,9 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
   return (
     <button
       onClick={scrollToTop}
-      className='fixed bottom-10 right-10 bg-purple-700 text-white p-2.5 rounded-full shadow-lg hover:bg-purple-600 transition-colors duration-200'
+      className='fixed bottom-10 right-10 bg-accent text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-buttonHighlight transition-transform duration-300 flex items-center justify-center'
     >
-      ▲
+      <FaArrowUp size={20} />
     </button>
   );
 };
