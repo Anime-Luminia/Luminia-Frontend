@@ -1,46 +1,48 @@
-# Getting Started with Create React App
+## 기술스택
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 🛠 Frontend
 
-## Available Scripts
+| 역할                 | 종류                                                                                                                                                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework            | <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>                                                                                                                                           |
+| CSS, State | <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/> <img src="https://img.shields.io/badge/recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white"/>                                                                                                                                                   |
+| Language               | <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>                                         |
+| ETC               | <img src="https://img.shields.io/badge/apollo graphql-311C87?style=for-the-badge&logo=apollographql&logoColor=white"/>                                         |
 
-In the project directory, you can run:
+<br />
 
-### `npm start`
+### 💾 Backend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+| 역할                 | 종류                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework            | <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Spring Security-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                                         |
+| Database             | <img alt="RED" src ="https://img.shields.io/badge/postgresql-4169E1.svg?&style=for-the-badge&logo=MySQL&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Redis-DC382D.svg?&style=for-the-badge&logo=Redis&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/elasticsearch-005571.svg?&style=for-the-badge&logo=elasticsearch&logoColor=white"/>  |
+| Programming Language | <img alt="RED" src ="https://img.shields.io/badge/JAVA-004027.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/> |
+| Protocol                 | <img alt="RED" src ="https://img.shields.io/badge/graphql-E10098.svg?&style=for-the-badge&logo=graphql&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/REST-resend.svg?&style=for-the-badge&logo=resend&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Deploy               | <img alt="RED" src ="https://img.shields.io/badge/Nginx-009639.svg?&style=for-the-badge&logo=nginx&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Docker-2496ED.svg?&style=for-the-badge&logo=docker&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS EC2-FF9900.svg?&style=for-the-badge&logo=AmazonEC2&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS RDS-527FFF.svg?&style=for-the-badge&logo=AmazonRds&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS S3-569A31.svg?&style=for-the-badge&logo=AmazonS3&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Amazon Route 53-8C4FFF.svg?&style=for-the-badge&logo=Amazon Route 53&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS SES-DD344C.svg?&style=for-the-badge&logo=amazonsimpleemailservice&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS Route 53-8C4FFF.svg?&style=for-the-badge&logo=Amazon Route 53&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS Elasticache-C925D1.svg?&style=for-the-badge&logo=amazonelasticache&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS ELB-8C4FFF.svg?&style=for-the-badge&logo=awselasticloadbalancing&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS SQS-FF4F8B.svg?&style=for-the-badge&logo=amazonsqs&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/AWS Lambda-FF9900.svg?&style=for-the-badge&logo=awslambda&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Terraform-844FBA.svg?&style=for-the-badge&logo=terraform&logoColor=white"/>|
+| CI/CD                | <img alt="RED" src ="https://img.shields.io/badge/Github Actions-2088FF.svg?&style=for-the-badge&logo=githubactions&logoColor=white"/> |
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+<br />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 📻 AI
 
-### `npm run build`
+| 역할                 | 종류                                                                                                                                                                                                                                                        |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Programming Language | <img alt="RED" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>                                                                                                                                     |
+| Development          | <img alt="RED" src ="https://img.shields.io/badge/OpenAI-412991.svg?&style=for-the-badge&logo=openai&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Google Colab-F9AB00.svg?&style=for-the-badge&logo=google colab&logoColor=white"/> |
+| Technology           | <img alt="RED" src ="https://img.shields.io/badge/FAISS-3B5EE9.svg?&style=for-the-badge&logo=faiss&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/RAG-000000.svg?&style=for-the-badge&logo=rag&logoColor=white"/>                     |
+| Test                 | <img src="https://img.shields.io/badge/LangSmith-7EBC6F?style=for-the-badge&logo=langsmith&logoColor=white"/>                                                                                                                                               |
+| Server               | <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>                                                                                                                                                   |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br />
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🔨 Tools
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| 역할            | 종류                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version Control | <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white">                                                                                                                                                                                                                                                                                                                                                                                               |
+| Cooperation     | <img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white"> <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white"> <img alt="RED" src ="https://img.shields.io/badge/Swagger-85EA2D.svg?&style=for-the-badge&logo=swagger&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/diagrams.net-F08705.svg?&style=for-the-badge&logo=diagramsdotnet&logoColor=white"/> |
+| Test            | <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/> <img src="https://img.shields.io/badge/Apache Jmeter-D22128?style=for-the-badge&logo=apachejmeter&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                                                        |
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+<br />
