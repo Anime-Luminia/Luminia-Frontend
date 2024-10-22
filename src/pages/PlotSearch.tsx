@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NavBar from '../components/NavBar';
 
 const PlotSearch: React.FC = () => {
   const [plotQuery, setPlotQuery] = useState('');

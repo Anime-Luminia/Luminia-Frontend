@@ -25,7 +25,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
 
   return (
     <div
-      className='bg-white shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer flex flex-col justify-between transform transition-transform duration-300 hover:scale-105'
+      className='bg-white dark:bg-darkCardAlt shadow-md rounded-lg overflow-hidden max-w-xs cursor-pointer flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 dark:hover:bg-darkHover'
       onClick={handleCardClick}
     >
       <div className='w-full h-56 sm:h-64'>
@@ -33,20 +33,23 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
           src={imageUrl}
           alt={koreanName}
           className='w-full h-full object-cover'
+          loading='lazy'
         />
       </div>
 
       <div className='p-4 flex flex-col justify-between text-center'>
         <div className='flex items-center justify-center h-10 sm:h-14'>
-          <h2 className='text-base sm:text-lg font-semibold mb-1 line-clamp-2'>
+          <h2 className='text-base sm:text-lg font-semibold mb-1 line-clamp-2 dark:text-darkTitle'>
             {koreanName}
           </h2>
         </div>
         <div>
-          <p className='text-sm text-gray-600 truncate'>
+          <p className='text-sm text-gray-600 dark:text-darkTitle truncate'>
             제작사: {productionCompany}
           </p>
-          <p className='text-sm text-gray-800 font-bold'>평점: {score}</p>
+          <p className='text-sm text-gray-800 dark:text-darkTitle font-bold'>
+            평점: {score}
+          </p>
         </div>
       </div>
     </div>

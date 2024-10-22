@@ -41,7 +41,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     } else {
       return renderOtherIcon(status);
     }
-    return null;
   };
 
   const renderGenreIcon = (status: string) => {
@@ -190,7 +189,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       {isOpen && (
         <div
           ref={dropdownRef}
-          className='absolute z-10 mt-2 p-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-72 overflow-y-auto grid grid-cols-2 gap-2'
+          className='absolute z-10 mt-2 p-2 bg-white dark:bg-darkDropdownBg border border-gray-300 dark:border-darkDropdownBorder rounded-lg shadow-lg max-h-72 overflow-y-auto grid grid-cols-2 gap-2'
           style={{ width: '100%' }}
         >
           <div
@@ -205,7 +204,6 @@ const Dropdown: React.FC<DropdownProps> = ({
                 : {}
             }
           >
-            {' '}
             {options.map((option) => (
               <div key={option} className='flex items-center space-x-1 px-2'>
                 <span
@@ -220,7 +218,9 @@ const Dropdown: React.FC<DropdownProps> = ({
                 >
                   {renderIcon(selectedOptions[option] || '')}
                 </span>
-                <div className='ml-2 whitespace-nowrap '>{option}</div>{' '}
+                <div className='ml-2 whitespace-nowrap text-gray-900 dark:text-darkDropdownText'>
+                  {option}
+                </div>
               </div>
             ))}
           </div>

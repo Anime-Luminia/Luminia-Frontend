@@ -3,6 +3,7 @@ import AnimeList from '../components/AnimeList';
 import FilterModal from '../components/FilterModal';
 import SortDropdown from '../components/SortDropdown';
 import ScrollToTopButton from '../components/ScrollToTopButton';
+import throttle from 'lodash/throttle';
 import { api } from '../api/axios';
 import { Anime } from '../types/Anime';
 import { ApiResponse } from '../types/response';
@@ -75,9 +76,7 @@ const AnimeSearch: React.FC = () => {
 
       const response = await api.get<ApiResponse<{ animes: Anime[] }>>(
         '/api/anime/list',
-        {
-          params,
-        }
+        { params }
       );
 
       const data = response.data;
@@ -85,7 +84,11 @@ const AnimeSearch: React.FC = () => {
       if (data.success && data.response?.animes) {
         const animes = data.response.animes || [];
 
-        //중복되지 않은 애니만 처리하기 (ID 기준)
+        if (animes.length === 0) {
+          setHasMore(false);
+          return;
+        }
+
         const newAnimes = animes.filter(
           (anime) => !displayedAnimeIds.has(anime.malId)
         );
@@ -94,25 +97,18 @@ const AnimeSearch: React.FC = () => {
           page === 1 ? animes : [...prevList, ...newAnimes]
         );
 
-        // 새로운 애니의를 Set에 넣어두기
         setDisplayedAnimeIds((prevIds) => {
           const updatedIds = new Set(prevIds);
           newAnimes.forEach((anime) => updatedIds.add(anime.malId));
           return updatedIds;
         });
 
-        if (newAnimes.length > 0) {
-          const lastAnime = newAnimes[newAnimes.length - 1];
-          params.lastKoreanName = lastAnime.koreanName;
-          params.lastMalId = lastAnime.malId;
-        }
-
         setHasMore(animes.length === 50);
       } else {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('데이터를 가져오는 중 오류 발생:', error);
     } finally {
       setLoading(false);
     }
@@ -122,7 +118,9 @@ const AnimeSearch: React.FC = () => {
   const handleSearch = () => {
     setPage(1);
     setAnimeList([]);
+    setDisplayedAnimeIds(new Set());
     setCurrentQuery(searchQuery);
+    setHasMore(true);
     if (searchQuery) {
       setSearchParams({ searchQuery });
     } else {
@@ -152,24 +150,30 @@ const AnimeSearch: React.FC = () => {
     }
   }, [initialLoad]);
 
+  const throttledSetPage = useCallback(
+    throttle(() => {
+      setPage((prevPage) => prevPage + 1);
+    }, 1000),
+    []
+  );
+
   // Intersection Observer를 사용한 스크롤 감지
   const lastAnimeElementRef = useCallback(
     (node: HTMLDivElement | null) => {
-      console.log('테스트1' + loading + ' ' + hasMore);
       if (loading || !hasMore) return;
-      if (observer.current) {
-        console.log('테스트');
-        observer.current.disconnect();
-      }
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          setPage((prevPage) => prevPage + 1);
-        }
-      });
+      if (observer.current) observer.current.disconnect();
 
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            throttledSetPage();
+          }
+        },
+        { rootMargin: '500px' }
+      );
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore, throttledSetPage]
   );
 
   // 스크롤 위치 추적 및 플로팅 버튼 표시
@@ -190,15 +194,15 @@ const AnimeSearch: React.FC = () => {
   }, []);
 
   return (
-    <div className='p-8 bg-gray-100 min-h-screen'>
-      <h1 className='text-4xl font-bold text-center mb-6 text-accent'>
+    <div className='p-8 bg-gray-100 dark:bg-darkBack min-h-screen'>
+      <h1 className='text-4xl font-bold text-center mb-6 text-accent dark:text-darkTitle'>
         애니 검색 (아직 필터 작동 안됨)
       </h1>
       <div className='max-w-lg mx-auto mb-8'>
         <div className='max-w-lg mx-auto mb-8 flex space-x-2'>
           <input
             type='text'
-            className='border border-lightGray p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-accent'
+            className='border border-lightGray dark:border-gray-700 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-accent dark:bg-darkCardAlt dark:text-darkTitle'
             placeholder='애니 제목을 검색하세요'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -209,7 +213,7 @@ const AnimeSearch: React.FC = () => {
             }}
           />
           <button
-            className='bg-gray-800 text-white py-3 px-4 rounded-lg hover:bg-gray-700 flex items-center justify-center'
+            className='bg-gray-800 text-white dark:bg-darkButton dark:text-darkTitle py-3 px-4 rounded-lg hover:bg-gray-700 dark:hover:bg-darkButtonHover flex items-center justify-center'
             onClick={() => setIsFilterVisible(!isFilterVisible)}
           >
             <FaFilter size={20} />
@@ -218,7 +222,7 @@ const AnimeSearch: React.FC = () => {
 
         <div className='max-w-lg mx-auto mb-8'>
           <button
-            className='bg-accent hover:bg-hover text-white font-semibold py-3 px-4 rounded-lg w-full transition-colors duration-200'
+            className='bg-accent dark:bg-darkButton hover:bg-hover dark:hover:bg-darkButtonHover text-white dark:text-darkTitle font-semibold py-3 px-4 rounded-lg w-full transition-colors duration-200'
             onClick={handleSearch}
           >
             검색
@@ -244,19 +248,23 @@ const AnimeSearch: React.FC = () => {
       )}
 
       <div className='max-w-screen-xl mx-auto flex justify-between items-baseline mt-10 px-6'>
-        <p className='text-gray-600 whitespace-nowrap'>
+        <p className='text-gray-600 dark:text-darkTitle whitespace-nowrap'>
           총 {animeList.length}개의 작품이 검색되었어요!
         </p>
         <SortDropdown sortBy={sortBy} onSortChange={handleSortChange} />
       </div>
 
-      <div className='max-w-screen-xl mx-auto border-t border-lightGray my-4'></div>
+      <div className='max-w-screen-xl mx-auto border-t border-lightGray dark:border-gray-700 my-4'></div>
 
       <AnimeList
         animeList={animeList}
         lastAnimeElementRef={lastAnimeElementRef}
       />
-      {loading && <p className='text-center'>로딩 중...</p>}
+      {loading && (
+        <p className='text-center text-gray-600 dark:text-darkTitle'>
+          로딩 중...
+        </p>
+      )}
 
       <ScrollToTopButton showScrollTopButton={showScrollTopButton} />
     </div>

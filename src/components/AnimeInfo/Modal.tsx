@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Tabs from '../Tabs';
+import Tabs from './Tabs';
 import { api } from '../../api/axios';
 import { ApiResponse } from '../../types/response';
 import { AnimeDetails } from '../../types/AnimeDetails';
 import AnimeInfoSection from './AnimeInfoSection';
 import SimilarTab from './SimilarTab';
-import ReviewsTab from './ReviewsTab';
+import ReviewsTab from '../AnimeReview/ReviewsTab';
 import InfoTab from './InfoTab';
 
 const Modal: React.FC = () => {
@@ -88,30 +88,49 @@ const Modal: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300 ${
+      className={`fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-80 flex items-center justify-center z-50 transition-opacity duration-300 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleOutsideClick}
     >
       <div
-        className={`bg-white rounded-lg modal-content shadow-lg w-full max-w-4xl p-6 relative transition-transform duration-300 ${
+        className={`bg-white dark:bg-darkModal rounded-lg modal-content shadow-lg w-full max-w-6xl p-6 relative transition-transform duration-300 ${
           isVisible ? 'animate-fade-in' : 'animate-fade-out'
-        }`}
-        style={{ maxHeight: '90vh', overflowY: 'auto', scrollbarWidth: 'none' }}
+        } min-h-[600px] max-h-[95vh] overflow-y-auto`}
+        style={{ maxHeight: '95vh', overflowY: 'auto', scrollbarWidth: 'none' }}
       >
         <button
           onClick={handleCloseModal}
-          className='absolute top-4 right-4 text-gray-600 hover:text-gray-900'
+          className='absolute top-2 right-2 text-gray-600 hover:text-gray-900 dark:text-darkTextSecondary dark:hover:text-darkTextPrimary z-50'
         >
-          ✖️
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth='2'
+            stroke='currentColor'
+            className='w-6 h-6'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M6 18L18 6M6 6l12 12'
+            />
+          </svg>
         </button>
 
         <AnimeInfoSection animeDetails={animeDetails} />
 
         <Tabs onTabChange={setActiveTab} />
 
-        <div className='mt-4'>
-          {isLoading ? <p>로딩 중...</p> : renderTabContent()}
+        <div className='mt-4 min-h-[500px]'>
+          {isLoading ? (
+            <p className='text-center text-gray-600 dark:text-darkTextPrimary'>
+              로딩 중...
+            </p>
+          ) : (
+            renderTabContent()
+          )}
         </div>
       </div>
     </div>
