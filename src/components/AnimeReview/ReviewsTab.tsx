@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReviewCard from './ReviewCard';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useRecoilValue } from 'recoil';
 import { loggedInState } from '../../recoil/atoms';
 import { tierToEnum } from '../../types/tierToEnum';
@@ -62,12 +62,15 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ malId }) => {
   const [postReview] = useMutation(POST_REVIEW);
   const [updateReview] = useMutation(UPDATE_REVIEW);
 
-  const [fetchAnimeStatistics, { loading, data }] = useLazyQuery(
+  const { loading, data, fetchMore, error } = useQuery(
     GET_ANIME_WITH_STATISTICS,
     {
       variables: { animeId: malId, limit: 10, cursor: cursor ?? null },
       fetchPolicy: 'cache-and-network',
-      onError: (err) => console.error('Error fetching reviews', err),
+      onError: (err) => {
+        console.error('Error fetching reviews', err);
+        setErrorMessage('리뷰 데이터를 불러오는 중 문제가 발생했습니다.');
+      },
     }
   );
 
