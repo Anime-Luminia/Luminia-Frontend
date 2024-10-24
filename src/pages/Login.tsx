@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { api } from '../api/axios';
-import { loggedInState } from '../recoil/atoms'; // Recoil 상태 가져오기
+import { loggedInState, accessTokenState } from '../recoil/atoms'; // Recoil 상태 가져오기
 import {
   FaUserAlt,
   FaLock,
@@ -18,11 +18,12 @@ const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loggedIn) {
-      navigate('/');
+      navigate('/'); // 로그인 상태이면 홈으로 이동
     }
   }, [loggedIn, navigate]);
 
@@ -33,7 +34,7 @@ const Login: React.FC = () => {
       setErrorMessage(null);
       setSuccessMessage(null);
 
-      const response = await api.post('/api/auth/login', {
+      const response = await api.post('/auth/login', {
         email: username,
         password: password,
         rememberMe: rememberMe,
@@ -42,19 +43,27 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         setSuccessMessage('로그인 성공!');
         setErrorMessage(null);
-        setLoggedIn(true);
-        navigate('/');
+
+        // accessToken 저장
+        const token = response.data.accessToken;
+        setAccessToken(token); // 전역 상태 업데이트
+        setLoggedIn(true); // 로그인 상태 업데이트
+        navigate('/'); // 홈으로 리다이렉트
       } else {
         setErrorMessage('로그인 실패: ' + response.data.message);
         setSuccessMessage(null);
+        setLoggedIn(false);
       }
     } catch (error: any) {
+      console.log(error);
       if (error.response) {
         setErrorMessage(
           '로그인 실패: ' + (error.response.data.message || '알 수 없는 오류')
         );
+        setLoggedIn(false);
       } else {
         setErrorMessage('로그인 실패: 서버와 통신 중 오류가 발생했습니다.');
+        setLoggedIn(false);
       }
       setSuccessMessage(null);
     }

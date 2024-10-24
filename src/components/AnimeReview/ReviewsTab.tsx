@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReviewCard from './ReviewCard';
-import { useQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRecoilValue } from 'recoil';
 import { loggedInState } from '../../recoil/atoms';
 import { tierToEnum } from '../../types/tierToEnum';
@@ -62,17 +62,27 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ malId }) => {
   const [postReview] = useMutation(POST_REVIEW);
   const [updateReview] = useMutation(UPDATE_REVIEW);
 
-  const { loading, data, fetchMore, error } = useQuery(
+  const [fetchAnimeStatistics, { loading, data }] = useLazyQuery(
     GET_ANIME_WITH_STATISTICS,
     {
       variables: { animeId: malId, limit: 10, cursor: cursor ?? null },
       fetchPolicy: 'cache-and-network',
-      onError: (err) => {
-        console.error('Error fetching reviews', err);
-        setErrorMessage('리뷰 데이터를 불러오는 중 문제가 발생했습니다.');
-      },
+      onError: (err) => console.error('Error fetching reviews', err),
     }
   );
+
+  const [fetchMoreReviews] = useLazyQuery(GET_MORE_REVIEWS, {
+    variables: { animeId: malId, limit: 10, cursor: cursor ?? null },
+    fetchPolicy: 'cache-and-network',
+    onCompleted: (newData) => {
+      const newReviews = newData?.reviews?.edges?.map((edge: any) => edge.node);
+      if (!newReviews) return;
+
+      setReviews((prev) => [...prev, ...newReviews]);
+      setHasNextPage(newData.reviews.pageInfo.hasNextPage);
+      setCursor(newData.reviews.pageInfo.cursor);
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -86,23 +96,8 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ malId }) => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasNextPage) {
-        // 추가 리뷰 요청
-        fetchMore({
-          query: GET_MORE_REVIEWS,
-          variables: { animeId: malId, limit: 10, cursor: cursor ?? null },
-        }).then((newData) => {
-          const newReviews = newData?.data?.reviews?.edges?.map(
-            (edge: any) => edge.node
-          );
-
-          if (!newReviews) {
-            return;
-          }
-          setReviews((prev) => [...prev, ...newReviews]);
-          setHasNextPage(newData.data.reviews.pageInfo.hasNextPage);
-          setCursor(newData.data.reviews.pageInfo.cursor);
-        });
+      if (entry.isIntersecting && hasNextPage && !loading) {
+        fetchMoreReviews();
       }
     });
 
@@ -113,7 +108,11 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ malId }) => {
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
-  }, [cursor, hasNextPage]);
+  }, [hasNextPage, cursor]);
+
+  useEffect(() => {
+    fetchAnimeStatistics();
+  }, [malId]);
 
   const handleSortChange = (sortType: string) => {
     let sortedReviews = [...reviews];

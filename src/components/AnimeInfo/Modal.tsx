@@ -21,7 +21,6 @@ const Modal: React.FC = () => {
   useEffect(() => {
     if (malId) {
       document.body.style.overflow = 'hidden';
-      setActiveTab('info');
       setIsVisible(true);
       fetchAnimeDetails(malId);
     } else {
@@ -39,7 +38,7 @@ const Modal: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await api.get<ApiResponse<AnimeDetails>>(
-        `/api/anime/${malId}`
+        `/anime/${malId}`
       );
 
       const data = response.data;
@@ -58,6 +57,7 @@ const Modal: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsVisible(false);
+    setActiveTab('info');
     setTimeout(() => {
       navigate('/anime-search');
     }, 300);

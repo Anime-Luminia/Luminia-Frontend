@@ -75,7 +75,7 @@ const AnimeSearch: React.FC = () => {
       };
 
       const response = await api.get<ApiResponse<{ animes: Anime[] }>>(
-        '/api/anime/list',
+        '/anime/list',
         { params }
       );
 

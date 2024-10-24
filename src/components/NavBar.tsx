@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { api } from '../api/axios';
@@ -12,6 +13,11 @@ const NavBar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('암ㄴ이ㅏ닝라');
+    console.log(loggedIn);
+  }, [loggedIn]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
