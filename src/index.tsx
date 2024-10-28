@@ -3,18 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloProvider } from '@apollo/client';
-import client from './apollo-client';
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>
 );
 
 // If you want to start measuring performance in your app, pass a function

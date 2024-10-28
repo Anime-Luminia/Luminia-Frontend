@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
 } from 'react-router-dom';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import { RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
 import NavBar from './components/NavBar';
 import AnimeSearch from './pages/AnimeSearch';
 import Modal from './components/AnimeInfo/Modal';
@@ -17,9 +18,17 @@ import axios, { AxiosError } from 'axios';
 import { API_URL } from './api/env';
 import { accessTokenState, loggedInState, darkModeState } from './recoil/atoms';
 import './index.css';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
@@ -28,32 +37,71 @@ const AppContent: React.FC = () => {
 
   const noNavBarRoutes = ['/login', '/signup'];
 
+  // Axios 인스턴스 생성
   const api = axios.create({
     baseURL: API_URL,
     withCredentials: true,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
     },
   });
 
-  api.interceptors.request.use((config) => {
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
-    }
-    return config;
+  // Axios Interceptor 설정
+  useEffect(() => {
+    const requestInterceptor = api.interceptors.request.use((config) => {
+      if (accessToken) {
+        console.log(accessToken + '으로 보냅니다');
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+      return config;
+    });
+
+    return () => {
+      api.interceptors.request.eject(requestInterceptor);
+    };
+  }, [accessToken]);
+
+  // Apollo Client 설정
+  const httpLink = new HttpLink({
+    uri: 'http://localhost:8080/graphql',
   });
 
-  const startTokenStatusCheck = () => {
-    // 기존 타이머가 있으면 정지
-    if (statusCheckInterval) {
-      clearInterval(statusCheckInterval);
+  const authLink = setContext((_, { headers }) => {
+    if (accessToken) {
+      return {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
     }
+    // accessToken이 없으면 Authorization 헤더를 추가하지 않음
+    return { headers };
+  });
 
-    // 새로운 타이머 설정
-    const newInterval = setInterval(checkTokenStatus, 5 * 60 * 1000); // 5분 간격
-    setStatusCheckInterval(newInterval);
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  });
+
+  const handleLogout = async () => {
+    try {
+      const response = await api.post('/auth/logout', null, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        setLoggedIn(false);
+        setAccessToken(null);
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
   };
 
+  // 토큰 상태 유효성 검사
   const checkTokenStatus = async () => {
     try {
       const response = await api.get('/auth/status');
@@ -62,60 +110,83 @@ const AppContent: React.FC = () => {
         console.log('Token is valid');
       }
     } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response) {
-        console.log(axiosError);
-        if (
-          axiosError.response.status === 403 ||
-          axiosError.response.status === 401
-        ) {
-          try {
-            const { data } = await api.post('/auth/reissue', {
-              withCredentials: true,
-            });
-            const newAccessToken = data.accessToken;
-
-            if (newAccessToken && newAccessToken !== accessToken) {
-              setAccessToken(newAccessToken);
-              setLoggedIn(true);
-              startTokenStatusCheck();
-            }
-          } catch (reissueError) {
-            const reissueAxiosError = reissueError as AxiosError;
-            setLoggedIn(false);
-            clearInterval(statusCheckInterval!);
-          }
-        } else {
-          console.error(
-            'Failed to check token status:',
-            axiosError.response.data
-          );
-          setLoggedIn(false);
-        }
-      } else {
-        console.error(
-          'An unexpected error occurred while checking token status:',
-          error
-        );
-        setLoggedIn(false);
-      }
+      handleTokenStatusError(error);
     }
   };
 
+  const handleTokenStatusError = async (error: unknown) => {
+    const axiosError = error as AxiosError;
+
+    if (
+      axiosError.response &&
+      (axiosError.response.status === 403 || axiosError.response.status === 401)
+    ) {
+      await attemptTokenReissue();
+    } else {
+      console.error(
+        'Failed to check token status:',
+        axiosError.response?.data || error
+      );
+      setLoggedIn(false);
+      deactivateTokenStatusCheck();
+    }
+  };
+
+  const attemptTokenReissue = async () => {
+    try {
+      const { data } = await api.post('/auth/reissue');
+      const newAccessToken = data.response.accessToken;
+
+      if (newAccessToken) {
+        setAccessToken(newAccessToken);
+        setLoggedIn(true);
+        console.log(newAccessToken);
+        console.log('Token reissued successfully');
+      } else {
+        setLoggedIn(false);
+      }
+    } catch (error) {
+      console.error('Failed to reissue token:', error);
+      setLoggedIn(false);
+      deactivateTokenStatusCheck();
+    }
+  };
+
+  const activateTokenStatusCheck = () => {
+    deactivateTokenStatusCheck();
+    const interval = setInterval(checkTokenStatus, 1 * 60 * 1000);
+    setStatusCheckInterval(interval);
+  };
+
+  const deactivateTokenStatusCheck = () => {
+    if (statusCheckInterval) {
+      clearInterval(statusCheckInterval);
+      setStatusCheckInterval(null);
+    }
+  };
+
+  // 첫 로드 시 토큰 상태 검사
   useEffect(() => {
     const initialCheck = async () => {
-      await checkTokenStatus(); // 초기 로드 시 토큰 상태 확인
-      startTokenStatusCheck(); // 초기 타이머 시작
+      await checkTokenStatus();
     };
 
-    initialCheck(); // 컴포넌트 마운트 시 초기 확인
+    initialCheck();
+  }, []);
+
+  // loggedIn 상태에 따른 검사 활성화/비활성화
+  useEffect(() => {
+    if (loggedIn) {
+      activateTokenStatusCheck();
+    } else {
+      deactivateTokenStatusCheck();
+      setAccessToken(null);
+    }
 
     return () => {
-      if (statusCheckInterval) {
-        clearInterval(statusCheckInterval); // 컴포넌트 언마운트 시 타이머 정리
-      }
+      deactivateTokenStatusCheck();
     };
-  }, [accessToken]); // accessToken 변경 시 효과 실행
+  }, [loggedIn]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -129,8 +200,10 @@ const AppContent: React.FC = () => {
   }, [setDarkMode]);
 
   return (
-    <>
-      {!noNavBarRoutes.includes(location.pathname) && <NavBar />}
+    <ApolloProvider client={client}>
+      {!noNavBarRoutes.includes(location.pathname) && (
+        <NavBar handleLogout={handleLogout} />
+      )}
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='/plot-search' element={<PlotSearch />} />
@@ -140,7 +213,7 @@ const AppContent: React.FC = () => {
         <Route path='/signup' element={<SignUp />} />
       </Routes>
       <Modal />
-    </>
+    </ApolloProvider>
   );
 };
 

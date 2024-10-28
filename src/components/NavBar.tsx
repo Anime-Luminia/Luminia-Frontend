@@ -8,31 +8,18 @@ import { loggedInState, darkModeState } from '../recoil/atoms';
 import darkModeIcon from '../assets/moon.svg';
 import lightModeIcon from '../assets/sun.svg';
 
-const NavBar: React.FC = () => {
+interface NavBarProps {
+  handleLogout: () => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ handleLogout }) => {
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log('암ㄴ이ㅏ닝라');
-    console.log(loggedIn);
-  }, [loggedIn]);
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const response = await api.post('/api/auth/logout');
-      if (response.status === 200) {
-        setLoggedIn(false);
-        window.location.href = '/';
-      }
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
   };
 
   const toggleDarkMode = () => {

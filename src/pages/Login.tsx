@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { api } from '../api/axios';
 import { loggedInState, accessTokenState } from '../recoil/atoms'; // Recoil 상태 가져오기
@@ -20,6 +20,9 @@ const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.from?.pathname || '/';
 
   useEffect(() => {
     if (loggedIn) {
@@ -45,10 +48,10 @@ const Login: React.FC = () => {
         setErrorMessage(null);
 
         // accessToken 저장
-        const token = response.data.accessToken;
+        const token = response.data.response.accessToken;
         setAccessToken(token); // 전역 상태 업데이트
         setLoggedIn(true); // 로그인 상태 업데이트
-        navigate('/'); // 홈으로 리다이렉트
+        navigate(redirectPath);
       } else {
         setErrorMessage('로그인 실패: ' + response.data.message);
         setSuccessMessage(null);
