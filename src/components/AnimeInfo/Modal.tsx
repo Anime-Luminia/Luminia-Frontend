@@ -38,7 +38,7 @@ const Modal: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await api.get<ApiResponse<AnimeDetails>>(
-        `/anime/${malId}`
+        `/api/anime/${malId}`
       );
 
       const data = response.data;

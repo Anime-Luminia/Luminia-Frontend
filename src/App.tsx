@@ -37,7 +37,6 @@ const AppContent: React.FC = () => {
 
   const noNavBarRoutes = ['/login', '/signup'];
 
-  // Axios 인스턴스 생성
   const api = axios.create({
     baseURL: API_URL,
     withCredentials: true,
@@ -46,7 +45,6 @@ const AppContent: React.FC = () => {
     },
   });
 
-  // Axios Interceptor 설정
   useEffect(() => {
     const requestInterceptor = api.interceptors.request.use((config) => {
       if (accessToken) {
@@ -61,22 +59,17 @@ const AppContent: React.FC = () => {
     };
   }, [accessToken]);
 
-  // Apollo Client 설정
   const httpLink = new HttpLink({
-    uri: 'http://localhost:8080/graphql',
+    uri: 'https://luminina.kr/api/graphql',
   });
 
   const authLink = setContext((_, { headers }) => {
-    if (accessToken) {
-      return {
-        headers: {
-          ...headers,
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-    }
-    // accessToken이 없으면 Authorization 헤더를 추가하지 않음
-    return { headers };
+    return {
+      headers: {
+        ...headers,
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+    };
   });
 
   const client = new ApolloClient({
@@ -86,7 +79,7 @@ const AppContent: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await api.post('/auth/logout', null, {
+      const response = await api.post('/api/auth/logout', null, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -104,7 +97,7 @@ const AppContent: React.FC = () => {
   // 토큰 상태 유효성 검사
   const checkTokenStatus = async () => {
     try {
-      const response = await api.get('/auth/status');
+      const response = await api.get('/api/auth/status');
       if (response.status === 200) {
         setLoggedIn(true);
         console.log('Token is valid');
@@ -134,7 +127,7 @@ const AppContent: React.FC = () => {
 
   const attemptTokenReissue = async () => {
     try {
-      const { data } = await api.post('/auth/reissue');
+      const { data } = await api.post('/api/auth/reissue');
       const newAccessToken = data.response.accessToken;
 
       if (newAccessToken) {
@@ -180,7 +173,6 @@ const AppContent: React.FC = () => {
       activateTokenStatusCheck();
     } else {
       deactivateTokenStatusCheck();
-      setAccessToken(null);
     }
 
     return () => {

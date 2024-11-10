@@ -57,14 +57,14 @@ const MainPage: React.FC = () => {
           </Link>
         </div>
 
-        <div className='mt-12'>
+        {/* <div className='mt-12'>
           <Link
             to='/premium'
             className='bg-buttonHighlight text-white py-4 px-10 rounded-lg shadow-md hover:bg-yellow-500 transition-transform duration-200 transform hover:scale-110'
           >
             프리미엄 서비스 보기
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { API_URL } from './env';
 import { getAccessToken } from '../recoil/atoms'; // 헬퍼 함수 사용
 
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: 'https://luminia.kr',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json; charset=utf-8',

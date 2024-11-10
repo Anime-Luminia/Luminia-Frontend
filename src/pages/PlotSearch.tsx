@@ -7,7 +7,7 @@ const PlotSearch: React.FC = () => {
 
   const handleSearch = async () => {
     const response = await fetch(
-      `http://localhost:8080/api/anime/search?plot=${plotQuery}`
+      `http://luminia.kr/api/anime/search?plot=${plotQuery}`
     );
     const data = await response.json();
     setAnimeList(data.content);
